@@ -1,0 +1,37 @@
+apply plugin: 'java'
+apply plugin: 'eclipse-wtp'
+apply plugin: 'maven-publish'
+
+repositories {
+	mavenCentral()
+}
+
+defaultTasks = ['clean', 'jar']
+
+dependencies {
+	compile 'org.apache.commons:commons-lang3:3.0'
+	compile 'org.seleniumhq.selenium:selenium-server:2.47.1'
+	
+	
+}
+
+ task copyToLib( type: Copy ) {
+    into "$buildDir/libs/lib"
+    from configurations.runtime
+}
+
+tasks.withType(JavaCompile) { 
+    sourceCompatibility = "1.8"
+    targetCompatibility = "1.8" 
+}
+jar {
+dependsOn copyToLib
+    manifest {
+        attributes 'Main-Class': 'GoogleLogin'
+    }
+}
+
+
+task wrapper(type: Wrapper){
+	gradleVersion = '1.4'
+}
